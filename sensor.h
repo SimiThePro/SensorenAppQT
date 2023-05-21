@@ -17,6 +17,8 @@ public:
     Sensor(QString IconFilePath,QString Art, QString Benennung, QVector< struct Pin> Pins);
 private:
 
+
+
     QString IconFilePath;
     QString Art;
     QString Benennung;
@@ -28,13 +30,8 @@ private:
 QString ImageFilePath = static_cast<QString>(PROJECT_PATH) + "Images";
 
 
-inline QVector<Sensor> VerfuegbareSensoren{
-    Sensor(ImageFilePath + "Photoresistor.png",
-           "Photoresistor",
-           "",
-           QVector<Pin>{{1,"OUTPUT"}}),
-    Sensor(),
+inline QVector<Sensor> VerfuegbareSensoren;
+void InitializeSensoren();
 
-};
 
 #endif // SENSOR_H

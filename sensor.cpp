@@ -14,3 +14,9 @@ Sensor::Sensor(QString IconFilePath,QString Art, QString Benennung, QVector<stru
     this->Pins = Pins;
 }
 
+
+
+void InitializeSensoren()
+{
+    VerfuegbareSensoren.push_back()
+}
