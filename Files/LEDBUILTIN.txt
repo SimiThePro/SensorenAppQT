@@ -1,0 +1,9 @@
+~Includes
+~Variables
+~Setup
+pinMode(LED_BUILTIN, OUTPUT);
+~Loop
+digitalWrite(LED_BUILTIN, HIGH);  
+  delay(2000);                      
+  digitalWrite(LED_BUILTIN, LOW);   
+  delay(2000);                      

@@ -1,0 +1,22 @@
+#pragma region Includes
+#pragma endregion Includes
+
+#pragma region Variables
+int Ben = 10;
+#pragma endregion Variables
+
+void setup() {
+  #pragma region Setup
+  pinMode(LED_BUILTIN, OUTPUT);
+#pragma endregion Setup
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  #pragma region Loop
+  digitalWrite(LED_BUILTIN, HIGH);  
+  delay(1000);                      
+  digitalWrite(LED_BUILTIN, LOW);   
+  delay(1000);                      
+#pragma endregion Loop
+}
