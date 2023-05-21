@@ -4,6 +4,7 @@
 
 #include "QString"
 #include "QVector"
+#include "filemanager.h"
 
 struct Pin{
     int Pin;
@@ -14,7 +15,7 @@ class Sensor
 {
 public:
     Sensor();
-    Sensor(QString IconFilePath,QString Art, QString Benennung, QVector< struct Pin> Pins);
+    Sensor(QString IconFilePath,QString Art, QString Benennung, QVector< struct Pin> Pins,class CodeSnippet Snippet);
 private:
 
 
@@ -22,9 +23,8 @@ private:
     QString IconFilePath;
     QString Art;
     QString Benennung;
-
     QVector<Pin> Pins;
-
+    CodeSnippet Snippet;
 };
 
 QString ImageFilePath = static_cast<QString>(PROJECT_PATH) + "Images";
