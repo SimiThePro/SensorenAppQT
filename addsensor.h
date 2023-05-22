@@ -23,6 +23,10 @@ private:
     Ui::AddSensor *ui;
 
     QStringList Sensoren;
+
+    void InitializeSensors();
+
+    void clearLayout(QLayout *layout);
 };
 
 inline QVector<class Sensor> VerfuegbareSensoren;

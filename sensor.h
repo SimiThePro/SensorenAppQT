@@ -30,6 +30,7 @@ private:
 public:
     QString GetArt() const {return Art;}
     QString GetIconFilePath() const {return IconFilePath;}
+    QVector<Pin> GetPins() const {return Pins;}
 };
 
 
