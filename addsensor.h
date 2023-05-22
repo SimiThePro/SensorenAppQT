@@ -2,6 +2,7 @@
 #define ADDSENSOR_H
 
 #include <QDialog>
+#include "sensor.h"
 
 namespace Ui {
 class AddSensor;
@@ -15,10 +16,15 @@ public:
     explicit AddSensor(QWidget *parent = nullptr);
     ~AddSensor();
 
+private slots:
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::AddSensor *ui;
 
     QStringList Sensoren;
 };
+
+inline QVector<class Sensor> VerfuegbareSensoren;
 
 #endif // ADDSENSOR_H

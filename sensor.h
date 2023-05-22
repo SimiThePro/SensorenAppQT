@@ -25,12 +25,16 @@ private:
     QString Benennung;
     QVector<Pin> Pins;
     CodeSnippet Snippet;
+
+
+public:
+    QString GetArt() const {return Art;}
+    QString GetIconFilePath() const {return IconFilePath;}
 };
 
-QString ImageFilePath = static_cast<QString>(PROJECT_PATH) + "Images";
 
 
-inline QVector<Sensor> VerfuegbareSensoren;
+
 void InitializeSensoren();
 
 
