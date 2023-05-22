@@ -1,5 +1,6 @@
 #include "addsensor.h"
 #include "ui_addsensor.h"
+#include "QString"
 
 AddSensor::AddSensor(QWidget *parent) :
     QDialog(parent),
@@ -10,7 +11,7 @@ AddSensor::AddSensor(QWidget *parent) :
 
 
 
-    QPixmap pix("C:\\Users\\simim\\Documents\\QT\\Personal\\SensorenApp\\Images\\Photoresitor.png");
+    QPixmap pix(static_cast<QString>(PROJECT_PATH) + "\\Images\\Photoresitor.png");
     ui->label->setPixmap(pix.scaled(200,200,Qt::KeepAspectRatio));
 }
 

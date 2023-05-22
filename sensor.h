@@ -7,7 +7,7 @@
 #include "filemanager.h"
 
 struct Pin{
-    int Pin;
+    int PinNummer;
     QString Description;
 };
 
@@ -15,7 +15,7 @@ class Sensor
 {
 public:
     Sensor();
-    Sensor(QString IconFilePath,QString Art, QString Benennung, QVector< struct Pin> Pins,class CodeSnippet Snippet);
+    Sensor(QString IconFilePath,QString Art, QString Benennung, QVector<Pin> Pins,class CodeSnippet Snippet);
 private:
 
 
