@@ -15,15 +15,18 @@ SOURCES += \
     filemanager.cpp \
     main.cpp \
     mainwindow.cpp \
-    sensor.cpp
+    sensor.cpp \
+    serialcom.cpp
 
 HEADERS += \
     addsensor.h \
     filemanager.h \
     mainwindow.h \
-    sensor.h
+    sensor.h \
+    serialcom.h
 
 FORMS += \
+    Sensor.ui \
     addsensor.ui \
     mainwindow.ui
 

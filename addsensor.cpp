@@ -3,6 +3,7 @@
 #include "sensor.h"
 #include "QString"
 #include "filemanager.h"
+#include "mainwindow.h"
 
 AddSensor::AddSensor(QWidget *parent) :
     QDialog(parent),
@@ -10,6 +11,13 @@ AddSensor::AddSensor(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
+
+    mw = static_cast<MainWindow*>(parent);
+
+    if (mw == nullptr){
+        qErrnoWarning("No Parent");
+    }
 
     InitializeSensors();
 
@@ -22,12 +30,10 @@ AddSensor::AddSensor(QWidget *parent) :
     QPixmap pix(static_cast<QString>(PROJECT_PATH) + "\\Images\\Photoresitor.png");
     ui->label->setPixmap(pix.scaled(200,200,Qt::KeepAspectRatio));
 
-
-
     int Row = 0;
     for (Pin pin : VerfuegbareSensoren.at(ui->comboBox->currentIndex()).GetPins()){
         QLabel* NamePin = new QLabel;
-        QLineEdit* NumberPin = new QLineEdit;
+        QLabel* NumberPin = new QLabel;
 
         NamePin->setText(pin.Description);
         NumberPin->setText(QString::number(pin.PinNummer));
@@ -117,5 +123,11 @@ void AddSensor::clearLayout(QLayout *layout)
         }
         delete item;
     }
+}
+
+
+void AddSensor::on_buttonBox_accepted()
+{
+    mw->AddSensorToGrid(VerfuegbareSensoren.at(ui->comboBox->currentIndex()));
 }
 

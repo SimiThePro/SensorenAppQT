@@ -10,6 +10,9 @@
 #include "QEventLoop"
 #include "filemanager.h"
 #include "addsensor.h"
+#include "ui_Sensor.h"
+#include "QLabel"
+#include "QLineEdit"
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -17,6 +20,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+
 {
     ui->setupUi(this);
 
@@ -31,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     CLI = new QProcess;
     Compile = new QProcess;
     Upload = new QProcess;
-    CLI_Location = "C:\\Users\\simim\\Documents\\Arduino-CLI\\arduino-cli.exe";
+    CLI_Location = "C:/Users/simim/Documents/Arduino CLI/bin/arduino-cli.exe";
 
     Ino_Location = static_cast<QString>(PROJECT_PATH) + "Sketch";
 
@@ -59,13 +63,44 @@ void MainWindow::Compiling()
 
 }
 
+void MainWindow::AddSensorToGrid(Sensor sensor)
+{
+    QWidget* SensorWidget = new QWidget;
+    Ui::Sensor* SensorUi = new Ui::Sensor();
+    SensorUi->setupUi(SensorWidget);
+
+    SensorUi->label->setPixmap(QPixmap(sensor.GetIconFilePath()).scaled(100,100,Qt::KeepAspectRatio));
+
+    SensorUi->TypeLabel->setText(sensor.GetArt());
+
+    int Row = 0;
+    for (Pin pin : sensor.GetPins()){
+        QLabel* NamePin = new QLabel;
+        QLineEdit* NumberPin = new QLineEdit;
+
+        NamePin->setText(pin.Description);
+        NumberPin->setText(QString::number(pin.PinNummer));
+
+        SensorUi->PinsGrid->addWidget(NamePin,Row,0);
+        SensorUi->PinsGrid->addWidget(NumberPin,Row,1);
+        Row++;
+    }
+
+
+
+
+    SensorWidget->setMaximumSize(200,500);
+
+    ui->Sensoren->addWidget(SensorWidget,0,ui->Sensoren->columnCount()+1);
+}
+
 void MainWindow::Uploading()
 {
 
     qWarning() << "Uploading";
     arguments.clear();
 
-    arguments << "compile" << "--upload" << "--port" << "COM4" << "--fqbn" << "arduino:avr:uno" << Ino_Location;
+    arguments << "compile" << "--upload" << "--port" << "COM3" << "--fqbn" << "arduino:avr:uno" << Ino_Location;
 
     Upload->startDetached(CLI_Location,arguments);
 }
@@ -112,7 +147,7 @@ void MainWindow::on_pushButton_2_clicked()
     //fm->RemoveCodeSnippet(snippet);
 
 
-    AddSensor* sensor = new AddSensor;
+    AddSensor* sensor = new AddSensor(this);
     sensor->show();
 }
 

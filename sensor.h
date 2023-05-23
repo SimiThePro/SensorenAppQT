@@ -15,20 +15,20 @@ class Sensor
 {
 public:
     Sensor();
-    Sensor(QString IconFilePath,QString Art, QString Benennung, QVector<Pin> Pins,class CodeSnippet Snippet);
+    Sensor(QString IconFilePath,QString Type, QString Benennung, QVector<struct Pin> Pins,class CodeSnippet Snippet);
 private:
 
 
 
     QString IconFilePath;
-    QString Art;
+    QString Type;
     QString Benennung;
     QVector<Pin> Pins;
     CodeSnippet Snippet;
 
 
 public:
-    QString GetArt() const {return Art;}
+    QString GetArt() const {return Type;}
     QString GetIconFilePath() const {return IconFilePath;}
     QVector<Pin> GetPins() const {return Pins;}
 };

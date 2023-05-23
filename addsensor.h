@@ -19,6 +19,8 @@ public:
 private slots:
     void on_comboBox_currentIndexChanged(int index);
 
+    void on_buttonBox_accepted();
+
 private:
     Ui::AddSensor *ui;
 
@@ -27,6 +29,8 @@ private:
     void InitializeSensors();
 
     void clearLayout(QLayout *layout);
+
+    class MainWindow* mw;
 };
 
 inline QVector<class Sensor> VerfuegbareSensoren;

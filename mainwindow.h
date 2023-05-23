@@ -19,7 +19,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
+    void AddSensorToGrid(class Sensor);
 
 
 private slots:
@@ -46,6 +46,7 @@ private:
     QString Ino_Location;
 
     class FileManager* fm;
+
 
 
 };

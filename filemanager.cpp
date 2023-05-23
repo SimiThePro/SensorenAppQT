@@ -82,7 +82,7 @@ void FileManager::AddCodeSnippetToIno(CodeSnippet Snippet)
 
     CodeSnippets.push_back(new CodeSnippet(Snippet));
 
-    QString FileContent = GetFileContent("C:\\Users\\simim\\Documents\\QT\\Personal\\SensorenApp\\Sketch\\Sketch.ino");
+    QString FileContent = GetFileContent(static_cast<QString>(PROJECT_PATH) + "Sketch/Sketch.ino");
 
     FileContent.insert(FileContent.lastIndexOf("#pragma endregion Includes"),Snippet.Includes);
     FileContent.insert(FileContent.lastIndexOf("#pragma endregion Variables"),Snippet.Variables);
@@ -90,7 +90,7 @@ void FileManager::AddCodeSnippetToIno(CodeSnippet Snippet)
     FileContent.insert(FileContent.lastIndexOf("#pragma endregion Loop"),Snippet.Loop);
 
 
-    QFile file("C:\\Users\\simim\\Documents\\QT\\Personal\\SensorenApp\\Sketch\\Sketch.ino");
+    QFile file(static_cast<QString>(PROJECT_PATH)  + "Sketch/Sketch.ino");
 
     if (!file.open(QIODevice::WriteOnly)){
         qCritical() << "Could not Open File";
@@ -109,7 +109,8 @@ void FileManager::AddCodeSnippetToIno(CodeSnippet Snippet)
 
 void FileManager::RemoveCodeSnippet(CodeSnippet Snippet)
 {
-    QString FileContent = GetFileContent("C:\\Users\\simim\\Documents\\QT\\Personal\\SensorenApp\\Sketch\\Sketch.ino");
+
+    QString FileContent = GetFileContent(static_cast<QString>(PROJECT_PATH)  + "Sketch/Sketch.ino");
 
     if (Snippet.Includes != "" || Snippet.Includes != "\n")
     FileContent.remove(Snippet.Includes);
@@ -120,7 +121,7 @@ void FileManager::RemoveCodeSnippet(CodeSnippet Snippet)
     if (Snippet.Loop != "" || Snippet.Loop != "\n")
     FileContent.remove(Snippet.Loop);
 
-    QFile file("C:\\Users\\simim\\Documents\\QT\\Personal\\SensorenApp\\Sketch\\Sketch.ino");
+    QFile file(static_cast<QString>(PROJECT_PATH)  + "Sketch/Sketch.ino");
 
     if (!file.open(QIODevice::WriteOnly)){
     qCritical() << "Could not Open File";
