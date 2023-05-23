@@ -14,7 +14,6 @@ AddSensor::AddSensor(QWidget *parent) :
 
 
     mw = static_cast<MainWindow*>(parent);
-
     if (mw == nullptr){
         qErrnoWarning("No Parent");
     }
@@ -29,19 +28,6 @@ AddSensor::AddSensor(QWidget *parent) :
 
     QPixmap pix(static_cast<QString>(PROJECT_PATH) + "\\Images\\Photoresitor.png");
     ui->label->setPixmap(pix.scaled(200,200,Qt::KeepAspectRatio));
-
-    int Row = 0;
-    for (Pin pin : VerfuegbareSensoren.at(ui->comboBox->currentIndex()).GetPins()){
-        QLabel* NamePin = new QLabel;
-        QLabel* NumberPin = new QLabel;
-
-        NamePin->setText(pin.Description);
-        NumberPin->setText(QString::number(pin.PinNummer));
-
-        ui->PinsLayout->addWidget(NamePin,Row,0);
-        ui->PinsLayout->addWidget(NumberPin,Row,1);
-        Row++;
-    }
 
 
 
@@ -65,7 +51,7 @@ void AddSensor::on_comboBox_currentIndexChanged(int index)
         QLabel* NamePin = new QLabel;
         QLineEdit* NumberPin = new QLineEdit;
 
-
+        NumberPin->setValidator(new QIntValidator(0,20,this));
 
         NamePin->setText(pin.Description);
         NumberPin->setText(QString::number(pin.PinNummer));

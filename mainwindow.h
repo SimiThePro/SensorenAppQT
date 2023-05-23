@@ -28,6 +28,7 @@ private slots:
     void Uploading();
     void on_pushButton_2_clicked();
 
+
 private:
     Ui::MainWindow *ui;
 
@@ -46,9 +47,9 @@ private:
     QString Ino_Location;
 
     class FileManager* fm;
-
-
+    class SerialCOM* SerCOM;
 
 };
+
 
 #endif // MAINWINDOW_H

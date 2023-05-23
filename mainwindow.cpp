@@ -13,6 +13,7 @@
 #include "ui_Sensor.h"
 #include "QLabel"
 #include "QLineEdit"
+#include "serialcom.h"
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -43,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     fm = new FileManager;
+    SerCOM = new SerialCOM;
+
 }
 
 MainWindow::~MainWindow()
@@ -76,7 +79,7 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
     int Row = 0;
     for (Pin pin : sensor.GetPins()){
         QLabel* NamePin = new QLabel;
-        QLineEdit* NumberPin = new QLineEdit;
+        QLabel* NumberPin = new QLabel;
 
         NamePin->setText(pin.Description);
         NumberPin->setText(QString::number(pin.PinNummer));
@@ -89,8 +92,8 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
 
 
-    SensorWidget->setMaximumSize(200,500);
 
+    SensorWidget->setMaximumSize(200,500);
     ui->Sensoren->addWidget(SensorWidget,0,ui->Sensoren->columnCount()+1);
 }
 
@@ -150,4 +153,6 @@ void MainWindow::on_pushButton_2_clicked()
     AddSensor* sensor = new AddSensor(this);
     sensor->show();
 }
+
+
 
