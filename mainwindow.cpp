@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     InitializeArduino();
 
 
+
     fm = new FileManager;
     SerCOM = new SerialCOM;
 
@@ -76,6 +77,8 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
     SensorUi->TypeLabel->setText(sensor.GetArt());
 
+    SensorUi->DescriptionLabel->setText(sensor.GetDescription());
+
     int Row = 0;
     for (Pin pin : sensor.GetPins()){
         QLabel* NamePin = new QLabel;
@@ -95,6 +98,16 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
     SensorWidget->setMaximumSize(200,500);
     ui->Sensoren->addWidget(SensorWidget,0,ui->Sensoren->columnCount()+1);
+
+    CurrentSensors.push_back(sensor);
+    for (Pin pin : sensor.GetPins()){
+        UsedPins.push_back(pin.PinNummer);
+    }
+
+    for (int i = 0; i < UsedPins.length(); i++){
+        qInfo() << UsedPins.at(i);
+    }
+
 }
 
 void MainWindow::Uploading()

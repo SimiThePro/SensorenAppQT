@@ -14,7 +14,11 @@ private:
     QStringList* Ports;
     QString COMPort;
 
+    class QSerialPort *mSerial;
+
 public:
+
+    void SerialDataReady();
 
     void COMChanged(class QSerialPortInfo Info, Ui::MainWindow* ui);
 

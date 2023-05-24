@@ -18,6 +18,9 @@ AddSensor::AddSensor(QWidget *parent) :
         qErrnoWarning("No Parent");
     }
 
+    PinsLineEdits = QVector<QLineEdit*>{};
+
+
     InitializeSensors();
 
     for (Sensor sensor : VerfuegbareSensoren){
@@ -46,10 +49,14 @@ void AddSensor::on_comboBox_currentIndexChanged(int index)
 
     clearLayout(ui->PinsLayout);
 
+    PinsLineEdits.clear();
+
     int Row = 0;
     for (Pin pin : VerfuegbareSensoren.at(ui->comboBox->currentIndex()).GetPins()){
         QLabel* NamePin = new QLabel;
         QLineEdit* NumberPin = new QLineEdit;
+
+        PinsLineEdits.push_back(NumberPin);
 
         NumberPin->setValidator(new QIntValidator(0,20,this));
 
@@ -91,6 +98,7 @@ void AddSensor::InitializeSensors()
     };
 
 
+    CurrentSensors = QVector<Sensor>{};
 
 }
 
@@ -114,6 +122,29 @@ void AddSensor::clearLayout(QLayout *layout)
 
 void AddSensor::on_buttonBox_accepted()
 {
-    mw->AddSensorToGrid(VerfuegbareSensoren.at(ui->comboBox->currentIndex()));
+    Sensor selectedSensor;
+    int index = ui->comboBox->currentIndex();
+
+    selectedSensor.SetIconFilePath(VerfuegbareSensoren.at(index).GetIconFilePath());
+    selectedSensor.SetType(VerfuegbareSensoren.at(index).GetArt());
+    selectedSensor.SetDescription(ui->DescriptionLineEdit->text());
+
+    QVector<Pin> Pins{};
+    int i = 0;
+    for (QLineEdit* le : PinsLineEdits){
+
+        QString Description;
+        int PinNumber;
+
+        Description = VerfuegbareSensoren.at(index).GetPins().at(i).Description;
+        PinNumber = le->text().toInt();
+
+        Pin pin = Pin{PinNumber,Description};
+        Pins.push_back(pin);
+        i++;
+    }
+    selectedSensor.SetPins(Pins);
+
+    mw->AddSensorToGrid(selectedSensor);
 }
 

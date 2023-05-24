@@ -31,8 +31,12 @@ private:
     void clearLayout(QLayout *layout);
 
     class MainWindow* mw;
+
+    QVector<class QLineEdit*> PinsLineEdits;
 };
 
 inline QVector<class Sensor> VerfuegbareSensoren;
+inline QVector<class Sensor> CurrentSensors;
+inline QVector<int> UsedPins{};
 
 #endif // ADDSENSOR_H
