@@ -99,7 +99,7 @@
       </widget>
      </item>
      <item>
-      <layout class="QGridLayout" name="gridLayout_3"/>
+      <layout class="QGridLayout" name="MessungenGrid"/>
      </item>
     </layout>
    </item>

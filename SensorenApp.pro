@@ -16,14 +16,14 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     sensor.cpp \
-    serialcom.cpp
+    serial.cpp
 
 HEADERS += \
     addsensor.h \
     filemanager.h \
     mainwindow.h \
     sensor.h \
-    serialcom.h
+    serial.h
 
 FORMS += \
     Sensor.ui \

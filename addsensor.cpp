@@ -92,6 +92,13 @@ void AddSensor::InitializeSensors()
         "",
         QVector<Pin>{{1,"TRIGGER"},{2,"ECHO"}},
         fm.GetCodeSnippetFromFile(ProjectPath + "/Files/LEDBUILTIN.txt")
+        },
+        Sensor{
+        ProjectPath + "/Images/PushButton.jpg",
+        "Push Button",
+        "",
+        QVector<Pin>{{1,"OUTPUT"}},
+        fm.GetCodeSnippetFromFile(ProjectPath + "/Files/LEDBUILTIN.txt")
         }
 
 
@@ -122,6 +129,9 @@ void AddSensor::clearLayout(QLayout *layout)
 
 void AddSensor::on_buttonBox_accepted()
 {
+
+
+
     Sensor selectedSensor;
     int index = ui->comboBox->currentIndex();
 
@@ -132,6 +142,7 @@ void AddSensor::on_buttonBox_accepted()
     QVector<Pin> Pins{};
     int i = 0;
     for (QLineEdit* le : PinsLineEdits){
+
 
         QString Description;
         int PinNumber;

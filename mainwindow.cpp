@@ -13,7 +13,7 @@
 #include "ui_Sensor.h"
 #include "QLabel"
 #include "QLineEdit"
-#include "serialcom.h"
+#include "serial.h"
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -45,8 +45,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     fm = new FileManager;
-    SerCOM = new SerialCOM;
 
+
+    Serial* serial = new Serial;
+
+
+    connect(serial,&Serial::MessageReceived,this,&MainWindow::MessageReceived);
 }
 
 MainWindow::~MainWindow()
@@ -79,6 +83,16 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
     SensorUi->DescriptionLabel->setText(sensor.GetDescription());
 
+
+    QLabel* DescriptionLabel = new QLabel;
+    ValueLabel = new QLabel;
+    DescriptionLabel->setText("Button Status");
+    ValueLabel->setText("LOW");
+
+    SensorUi->MessungenGrid->addWidget(DescriptionLabel,0,0);
+    SensorUi->MessungenGrid->addWidget(ValueLabel,0,1);
+
+
     int Row = 0;
     for (Pin pin : sensor.GetPins()){
         QLabel* NamePin = new QLabel;
@@ -96,6 +110,7 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
 
 
+
     SensorWidget->setMaximumSize(200,500);
     ui->Sensoren->addWidget(SensorWidget,0,ui->Sensoren->columnCount()+1);
 
@@ -107,6 +122,7 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
     for (int i = 0; i < UsedPins.length(); i++){
         qInfo() << UsedPins.at(i);
     }
+
 
 }
 
@@ -165,6 +181,15 @@ void MainWindow::on_pushButton_2_clicked()
 
     AddSensor* sensor = new AddSensor(this);
     sensor->show();
+
+
+}
+
+void MainWindow::MessageReceived(QString Message)
+{
+    if (ValueLabel->text() == "LOW")
+    ValueLabel->setText("HIGH");
+    else ValueLabel->setText("LOW");
 }
 
 

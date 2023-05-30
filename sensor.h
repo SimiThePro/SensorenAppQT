@@ -11,6 +11,11 @@ struct Pin{
     QString Description;
 };
 
+struct Messung{
+    QString Description;
+    QString Value;
+};
+
 class Sensor
 {
 public:
