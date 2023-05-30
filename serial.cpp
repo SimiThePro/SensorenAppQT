@@ -3,11 +3,9 @@
 #include "QMessageBox"
 
 Serial::Serial(QObject *parent)
-    : QObject{parent}
+    : QObject{parent},
+    mSerial(new QSerialPort)
 {
-
-    mSerial = new QSerialPort;
-
     connect(mSerial,&QSerialPort::readyRead, this, &Serial::ReadyRead);
 
     OpenSerialPort();
@@ -15,7 +13,7 @@ Serial::Serial(QObject *parent)
 
 void Serial::OpenSerialPort()
 {
-    mSerial->setPortName("COM3");
+    mSerial->setPortName("COM4");
     mSerial->setBaudRate(QSerialPort::Baud9600);
     mSerial->setDataBits(QSerialPort::Data8);
     mSerial->setParity(QSerialPort::NoParity);
@@ -32,6 +30,7 @@ void Serial::ReadyRead()
 {
 
     serialBuffer += QString::fromStdString(mSerial->readAll().toStdString());
+
 
     if (serialBuffer.contains('#'),serialBuffer.contains("*")){
         Message = serialBuffer.sliced(serialBuffer.indexOf('#')+1,(serialBuffer.indexOf('*')-1) - serialBuffer.indexOf('#'));

@@ -4,7 +4,7 @@
 
 #include <QMainWindow>
 #include "QProcess"
-
+#include "sensor.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -53,5 +53,8 @@ private:
 
 };
 
+inline QVector<class Sensor> VerfuegbareSensoren;
+inline QVector<class Sensor> CurrentSensors;
+inline QVector<int> UsedPins{};
 
 #endif // MAINWINDOW_H

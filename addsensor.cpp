@@ -105,7 +105,6 @@ void AddSensor::InitializeSensors()
     };
 
 
-    CurrentSensors = QVector<Sensor>{};
 
 }
 
@@ -133,6 +132,7 @@ void AddSensor::on_buttonBox_accepted()
 
 
     Sensor selectedSensor;
+
     int index = ui->comboBox->currentIndex();
 
     selectedSensor.SetIconFilePath(VerfuegbareSensoren.at(index).GetIconFilePath());
@@ -142,7 +142,6 @@ void AddSensor::on_buttonBox_accepted()
     QVector<Pin> Pins{};
     int i = 0;
     for (QLineEdit* le : PinsLineEdits){
-
 
         QString Description;
         int PinNumber;

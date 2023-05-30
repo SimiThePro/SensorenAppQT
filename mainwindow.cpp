@@ -20,7 +20,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow),
+    fm(new FileManager)
 
 {
     ui->setupUi(this);
@@ -43,9 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     InitializeArduino();
 
 
-
-    fm = new FileManager;
-
+    CurrentSensors = QVector<Sensor>{};
 
     Serial* serial = new Serial;
 
@@ -62,10 +61,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::Compiling()
 {
-    QElapsedTimer timer;
+
     arguments.clear();
     arguments << "compile" << "--fqbn" << "arduino:avr:uno" << Ino_Location << "-v";
-    timer.start();
     Compile->startDetached(CLI_Location,arguments);
     Compile->close();
 
@@ -76,6 +74,8 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
     QWidget* SensorWidget = new QWidget;
     Ui::Sensor* SensorUi = new Ui::Sensor();
     SensorUi->setupUi(SensorWidget);
+    sensor.SetUi(SensorUi);
+
 
     SensorUi->label->setPixmap(QPixmap(sensor.GetIconFilePath()).scaled(100,100,Qt::KeepAspectRatio));
 
@@ -115,6 +115,9 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
     ui->Sensoren->addWidget(SensorWidget,0,ui->Sensoren->columnCount()+1);
 
     CurrentSensors.push_back(sensor);
+
+
+
     for (Pin pin : sensor.GetPins()){
         UsedPins.push_back(pin.PinNummer);
     }
@@ -122,6 +125,8 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
     for (int i = 0; i < UsedPins.length(); i++){
         qInfo() << UsedPins.at(i);
     }
+
+
 
 
 }
@@ -187,9 +192,16 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::MessageReceived(QString Message)
 {
-    if (ValueLabel->text() == "LOW")
-    ValueLabel->setText("HIGH");
-    else ValueLabel->setText("LOW");
+
+    CurrentSensors.at(0).GetUi()->DescriptionLabel->setText(Message);
+
+    qInfo() << Message;
+
+
+    if (Message == "Pressed"){
+        ValueLabel->setText("HIGH");
+    }else if (Message == "Released") ValueLabel->setText("LOW");
+
 }
 
 

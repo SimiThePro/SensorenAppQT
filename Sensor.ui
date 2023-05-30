@@ -90,18 +90,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Messungen:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QGridLayout" name="MessungenGrid"/>
-     </item>
-    </layout>
+    <layout class="QGridLayout" name="MessungenGrid"/>
    </item>
   </layout>
  </widget>

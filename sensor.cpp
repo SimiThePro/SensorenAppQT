@@ -1,7 +1,6 @@
 #include "sensor.h"
 #include "filemanager.h"
 
-FileManager fm;
 
 Sensor::Sensor()
 {
