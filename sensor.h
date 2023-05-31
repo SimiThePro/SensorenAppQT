@@ -12,16 +12,16 @@ struct Pin{
     QString Description;
 };
 
-struct Messung{
+struct ValueMeasure{
     QString Description;
-    QString Value;
+    QString Value = 0;
 };
 
 class Sensor
 {
 public:
     Sensor();
-    Sensor(QString IconFilePath,QString Type, QString Description, QVector<struct Pin> Pins,class CodeSnippet Snippet);
+    Sensor(QString IconFilePath,QString Type, QString Description, QVector<struct Pin> Pins,QVector<ValueMeasure> Measures,class CodeSnippet Snippet);
 private:
 
 
@@ -31,13 +31,15 @@ private:
     QString Description;
     QVector<Pin> Pins;
     CodeSnippet Snippet;
+    QVector<ValueMeasure> Measures;
     Ui::Sensor* Ui;
 
 public:
-    QString GetArt() const {return Type;}
+    inline QString GetArt() const {return Type;}
     QString GetIconFilePath() const {return IconFilePath;}
     QVector<Pin> GetPins() const {return Pins;}
     QString GetDescription() const {return Description;}
+    QVector<ValueMeasure> GetMeasures() const {return Measures;}
     Ui::Sensor* GetUi() const {return Ui;}
     //Setter
     void SetIconFilePath(QString IconFilePath) {this->IconFilePath = IconFilePath;}

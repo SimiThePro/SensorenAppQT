@@ -84,6 +84,7 @@ void AddSensor::InitializeSensors()
         "Photoresistor",
         "",
         QVector<Pin>{{1,"OUTPUT"}},
+        QVector<ValueMeasure>{{"Resistance"}},
         fm.GetCodeSnippetFromFile(ProjectPath + "/Files/LEDBUILTIN.txt")},
         //Ultrasonic module
         Sensor{
@@ -91,6 +92,7 @@ void AddSensor::InitializeSensors()
         "Supersonic",
         "",
         QVector<Pin>{{1,"TRIGGER"},{2,"ECHO"}},
+        QVector<ValueMeasure>{{"Distance"}},
         fm.GetCodeSnippetFromFile(ProjectPath + "/Files/LEDBUILTIN.txt")
         },
         Sensor{
@@ -98,6 +100,7 @@ void AddSensor::InitializeSensors()
         "Push Button",
         "",
         QVector<Pin>{{1,"OUTPUT"}},
+        QVector<ValueMeasure>{{"Status"}},
         fm.GetCodeSnippetFromFile(ProjectPath + "/Files/LEDBUILTIN.txt")
         }
 
@@ -131,12 +134,12 @@ void AddSensor::on_buttonBox_accepted()
 
 
 
-    Sensor selectedSensor;
+
 
     int index = ui->comboBox->currentIndex();
 
-    selectedSensor.SetIconFilePath(VerfuegbareSensoren.at(index).GetIconFilePath());
-    selectedSensor.SetType(VerfuegbareSensoren.at(index).GetArt());
+    Sensor selectedSensor = VerfuegbareSensoren.at(index);
+
     selectedSensor.SetDescription(ui->DescriptionLineEdit->text());
 
     QVector<Pin> Pins{};
@@ -154,6 +157,7 @@ void AddSensor::on_buttonBox_accepted()
         i++;
     }
     selectedSensor.SetPins(Pins);
+
 
     mw->AddSensorToGrid(selectedSensor);
 }

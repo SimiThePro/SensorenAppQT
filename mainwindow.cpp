@@ -83,17 +83,25 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
     SensorUi->DescriptionLabel->setText(sensor.GetDescription());
 
-
-    QLabel* DescriptionLabel = new QLabel;
-    ValueLabel = new QLabel;
-    DescriptionLabel->setText("Button Status");
-    ValueLabel->setText("LOW");
-
-    SensorUi->MessungenGrid->addWidget(DescriptionLabel,0,0);
-    SensorUi->MessungenGrid->addWidget(ValueLabel,0,1);
-
-
     int Row = 0;
+    for (ValueMeasure measure : sensor.GetMeasures()){
+        QLabel* DescriptionLabel = new QLabel();
+        QLabel* ValueLabel = new QLabel;
+        DescriptionLabel->setText(measure.Description);
+        ValueLabel->setText("0");
+
+
+        SensorUi->MessungenGrid->addWidget(DescriptionLabel,Row,0);
+        SensorUi->MessungenGrid->addWidget(ValueLabel,Row,1);
+        Row++;
+    }
+
+
+
+
+
+
+    Row = 0;
     for (Pin pin : sensor.GetPins()){
         QLabel* NamePin = new QLabel;
         QLabel* NumberPin = new QLabel;
@@ -193,14 +201,33 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::MessageReceived(QString Message)
 {
 
-    CurrentSensors.at(0).GetUi()->DescriptionLabel->setText(Message);
 
-    qInfo() << Message;
+    if (Message.contains(':')){
+        qInfo() << Message.sliced(Message.indexOf(':')+1);
+
+        if (CurrentSensors.at(0).GetArt() == "Photoresistor"){
+
+            for (int i=0; i < CurrentSensors.at(0).GetUi()->MessungenGrid->count(); ++i) {
+                QLayoutItem *item = CurrentSensors.at(0).GetUi()->MessungenGrid->itemAt(i);
+                if (!item || !item->widget())
+                    continue;
+                QLabel *label = qobject_cast<QLabel*>(item->widget());
+                if (label) {
+                    if (i == 1){
+                        label->setText( Message.sliced(Message.indexOf(':')+1) + "Ω");
+                    }
+                }
+            }
+
+        }
+    }
 
 
     if (Message == "Pressed"){
-        ValueLabel->setText("HIGH");
-    }else if (Message == "Released") ValueLabel->setText("LOW");
+
+
+
+    }else if (Message == "Released");
 
 }
 

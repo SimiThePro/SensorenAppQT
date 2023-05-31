@@ -13,7 +13,7 @@ Serial::Serial(QObject *parent)
 
 void Serial::OpenSerialPort()
 {
-    mSerial->setPortName("COM4");
+    mSerial->setPortName("COM3");
     mSerial->setBaudRate(QSerialPort::Baud9600);
     mSerial->setDataBits(QSerialPort::Data8);
     mSerial->setParity(QSerialPort::NoParity);
