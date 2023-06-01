@@ -54,6 +54,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    for (CodeSnippet snippet : CodeSnippets){
+        FileManager::RemoveCodeSnippet(snippet);
+    }
+
     delete ui;
 }
 
@@ -122,6 +126,7 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
     SensorWidget->setMaximumSize(200,500);
     ui->Sensoren->addWidget(SensorWidget,0,ui->Sensoren->columnCount()+1);
 
+    fm->SetupFileForSensor(sensor);
     CurrentSensors.push_back(sensor);
 
 
@@ -186,14 +191,21 @@ void MainWindow::InitializeArduino()
 void MainWindow::on_pushButton_2_clicked()
 {
 
+    AddSensor* addsensor = new AddSensor(this);
+
     //CodeSnippet snippet = fm->GetCodeSnippetFromFile(static_cast<QString>(PROJECT_PATH) + "Files/LEDBUILTIN.txt");
     //fm->AddCodeSnippetToIno(snippet);
     //Uploading();
     //fm->RemoveCodeSnippet(snippet);
 
 
-    AddSensor* sensor = new AddSensor(this);
-    sensor->show();
+    //fm->ReplacePinNames(fm->GetFileContent(static_cast<QString>(PROJECT_PATH) + "Files/PushButton.txt"),QVector<Pin>{Pin{7,"Ben"},Pin{2,"Juden"}});
+
+    //Sensor sensor = VerfuegbareSensoren.at(2);
+    //sensor.SetPins(QVector<Pin>{Pin{5,"Ben"}});
+    //fm->SetupFileForSensor(sensor);
+
+    addsensor->exec();
 
 
 }
@@ -201,33 +213,32 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::MessageReceived(QString Message)
 {
 
+    int index = 0;
 
     if (Message.contains(':')){
+        index = static_cast<QString>(Message.at(0)).toInt();
         qInfo() << Message.sliced(Message.indexOf(':')+1);
 
-        if (CurrentSensors.at(0).GetArt() == "Photoresistor"){
+        if (CurrentSensors.size() <= index) return;
 
-            for (int i=0; i < CurrentSensors.at(0).GetUi()->MessungenGrid->count(); ++i) {
-                QLayoutItem *item = CurrentSensors.at(0).GetUi()->MessungenGrid->itemAt(i);
-                if (!item || !item->widget())
-                    continue;
-                QLabel *label = qobject_cast<QLabel*>(item->widget());
-                if (label) {
-                    if (i == 1){
-                        label->setText( Message.sliced(Message.indexOf(':')+1) + "Ω");
-                    }
+
+
+        for (int i=0; i < CurrentSensors.at(index).GetUi()->MessungenGrid->count(); ++i) {
+            QLayoutItem *item = CurrentSensors.at(index).GetUi()->MessungenGrid->itemAt(i);
+            if (!item || !item->widget())
+                continue;
+            QLabel *label = qobject_cast<QLabel*>(item->widget());
+            if (label) {
+                if (i == 1){
+                    label->setText( Message.sliced(Message.indexOf(':')+1));
                 }
             }
-
         }
+
+
     }
 
 
-    if (Message == "Pressed"){
-
-
-
-    }else if (Message == "Released");
 
 }
 

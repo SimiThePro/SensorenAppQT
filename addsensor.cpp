@@ -77,6 +77,7 @@ void AddSensor::InitializeSensors()
 
     QString ProjectPath =  static_cast<QString>(PROJECT_PATH);
 
+
     VerfuegbareSensoren = QVector<Sensor>{
         //Photoresistor
         Sensor{
@@ -84,24 +85,21 @@ void AddSensor::InitializeSensors()
         "Photoresistor",
         "",
         QVector<Pin>{{1,"OUTPUT"}},
-        QVector<ValueMeasure>{{"Resistance"}},
-        fm.GetCodeSnippetFromFile(ProjectPath + "/Files/LEDBUILTIN.txt")},
+        QVector<ValueMeasure>{{"Resistance"}}},
         //Ultrasonic module
         Sensor{
         ProjectPath + "/Images/Ultraschall.jpg",
         "Supersonic",
         "",
         QVector<Pin>{{1,"TRIGGER"},{2,"ECHO"}},
-        QVector<ValueMeasure>{{"Distance"}},
-        fm.GetCodeSnippetFromFile(ProjectPath + "/Files/LEDBUILTIN.txt")
+        QVector<ValueMeasure>{{"Distance"}}
         },
         Sensor{
         ProjectPath + "/Images/PushButton.jpg",
         "Push Button",
         "",
         QVector<Pin>{{1,"OUTPUT"}},
-        QVector<ValueMeasure>{{"Status"}},
-        fm.GetCodeSnippetFromFile(ProjectPath + "/Files/LEDBUILTIN.txt")
+        QVector<ValueMeasure>{{"Status"}}
         }
 
 
@@ -157,6 +155,7 @@ void AddSensor::on_buttonBox_accepted()
         i++;
     }
     selectedSensor.SetPins(Pins);
+
 
 
     mw->AddSensorToGrid(selectedSensor);

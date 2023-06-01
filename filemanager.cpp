@@ -1,5 +1,6 @@
 
 #include "filemanager.h"
+#include "sensor.h"
 #include "QFile"
 #include "QDebug"
 
@@ -7,6 +8,24 @@
 FileManager::FileManager()
 {
 
+}
+
+bool FileManager::CheckIfAlreadyContainsSnippet(CodeSnippet snippet)
+{
+    QString FileContent = GetFileContent(static_cast<QString>(PROJECT_PATH) + "Sketch/Sketch.ino");
+
+    if (FileContent.contains(snippet.Variables) || FileContent.contains(snippet.Setup) || FileContent.contains(snippet.Loop)){
+        return false;
+    }
+}
+
+void FileManager::SetIndexForVariables(QString &Content, int index)
+{
+    if (Content.contains("_index")){
+        while (Content.contains("_index")){
+            Content.replace("_index",QString::number(index));
+        }
+    }
 }
 
 QString FileManager::GetFileContent(QString path)
@@ -36,9 +55,17 @@ QString FileManager::GetFileContent(QString path)
 
 
 }
+
+void FileManager::SetupFileForSensor(Sensor sensor)
+{
+    CodeSnippet snippet = GetAndReplaceCodeSnippetFromSensor(sensor);
+    AddCodeSnippetToIno(snippet);
+}
 CodeSnippet FileManager::GetCodeSnippetFromFile(QString FileLocation)
 {
     QString FileContent = GetFileContent(FileLocation);
+
+    if (FileContent == "") return CodeSnippet{};
 
     QString Includes;
     QString Variables;
@@ -50,11 +77,12 @@ CodeSnippet FileManager::GetCodeSnippetFromFile(QString FileLocation)
     Setup = FileContent.sliced(FileContent.indexOf("~Setup")+7,FileContent.indexOf("~Loop")-FileContent.indexOf("~Setup")-7);
     Loop =  FileContent.sliced(FileContent.indexOf("~Loop")+6);
 
+    /*
     qInfo() << Includes;
     qInfo() << Variables;
     qInfo() << Setup;
     qInfo() << Loop;
-
+    */
 
     /*
     QFile Testfile("C:\\Users\\simim\\Documents\\QT\\Personal\\SensorenApp\\Files\\Test.txt");
@@ -71,16 +99,51 @@ CodeSnippet FileManager::GetCodeSnippetFromFile(QString FileLocation)
     Testfile.close();
     */
 
+
+
+
     CodeSnippet snippet = {Includes,Variables,Setup,Loop};
 
     return snippet;
 
 }
 
+CodeSnippet FileManager::GetAndReplaceCodeSnippetFromSensor(Sensor sensor)
+{
+    QString FileContent = GetFileContent(sensor.GetCodeSnippetFileLocation());
+
+    ReplacePinNames(FileContent,sensor.GetPins());
+    SetIndexForVariables(FileContent,0);
+
+    QString Includes;
+    QString Variables;
+    QString Setup;
+    QString Loop;
+
+    Includes = FileContent.sliced(10, FileContent.indexOf("~Variables")-10);
+    Variables = FileContent.sliced(FileContent.indexOf("~Variables")+11,FileContent.indexOf("~Setup")-FileContent.indexOf("~Variables")-11);
+    Setup = FileContent.sliced(FileContent.indexOf("~Setup")+7,FileContent.indexOf("~Loop")-FileContent.indexOf("~Setup")-7);
+    Loop =  FileContent.sliced(FileContent.indexOf("~Loop")+6);
+
+    qInfo() << Includes;
+    qInfo() << Variables;
+    qInfo() << Setup;
+    qInfo() << Loop;
+
+
+    CodeSnippet snippet = {Includes,Variables,Setup,Loop};
+
+    return snippet;
+
+}
+
+
 void FileManager::AddCodeSnippetToIno(CodeSnippet Snippet)
 {
 
-    CodeSnippets.push_back(new CodeSnippet(Snippet));
+    if (CheckIfAlreadyContainsSnippet(Snippet)) return;
+
+    CodeSnippets.push_back(Snippet);
 
     QString FileContent = GetFileContent(static_cast<QString>(PROJECT_PATH) + "Sketch/Sketch.ino");
 
@@ -104,7 +167,20 @@ void FileManager::AddCodeSnippetToIno(CodeSnippet Snippet)
 
     file.close();
 
-    qInfo() << FileContent;
+}
+
+void FileManager::ReplacePinNames(QString &Content, QVector<Pin> Pins)
+{
+    if (Content.contains("_analogPin") || Content.contains("_digitalPin")){
+        if (Content.contains("_digitalPin")){
+            for (int i = 0; Content.contains("_digitalPin"); i++){
+                while (Content.contains("_digitalPin" + QString::number(i))){
+                    Content.replace("_digitalPin" + QString::number(i),QString::number(Pins.at(i).PinNummer));
+                }
+            }
+        }
+    }
+
 }
 
 void FileManager::RemoveCodeSnippet(CodeSnippet Snippet)

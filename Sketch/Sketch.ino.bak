@@ -1,4 +1,5 @@
 #pragma region Includes
+#include <ezButton.h>
 #pragma endregion Includes
 
 #pragma region Variables
@@ -6,12 +7,19 @@
 
 void setup() {
 #pragma region Setup
-pinMode(LED_BUILTIN, OUTPUT);
+Serial.begin(9600);
 #pragma endregion Setup
 }
 
 // the loop function runs over and over again forever
 void loop() {
-#pragma region Loop                     
+String Message = "#";
+#pragma region Loop            
 #pragma endregion Loop
+
+//loop ends here
+	Message += "*";
+	if (Message != "#*"){
+		Serial.print(Message);
+	}
 }

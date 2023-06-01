@@ -21,7 +21,7 @@ class Sensor
 {
 public:
     Sensor();
-    Sensor(QString IconFilePath,QString Type, QString Description, QVector<struct Pin> Pins,QVector<ValueMeasure> Measures,class CodeSnippet Snippet);
+    Sensor(QString IconFilePath,QString Type, QString Description, QVector<struct Pin> Pins,QVector<ValueMeasure> Measures);
 private:
 
 
@@ -41,6 +41,8 @@ public:
     QString GetDescription() const {return Description;}
     QVector<ValueMeasure> GetMeasures() const {return Measures;}
     Ui::Sensor* GetUi() const {return Ui;}
+    QString GetCodeSnippetFileLocation() const;
+
     //Setter
     void SetIconFilePath(QString IconFilePath) {this->IconFilePath = IconFilePath;}
     void SetType(QString Type) {this->Type = Type;}

@@ -5,6 +5,9 @@
 #include "QString"
 #include "QVector"
 
+
+
+
 struct CodeSnippet{
     QString Includes;
     QString Variables;
@@ -12,7 +15,7 @@ struct CodeSnippet{
     QString Loop;
 };
 
-inline QVector<CodeSnippet*> CodeSnippets;
+inline QVector<CodeSnippet> CodeSnippets;
 
 
 class FileManager
@@ -22,12 +25,21 @@ public:
 
 private:
 
-    QString GetFileContent(QString path);
+
+    bool CheckIfAlreadyContainsSnippet(CodeSnippet snippet);
+    void SetIndexForVariables(QString& FileContent, int index);
 
 public:
-    CodeSnippet GetCodeSnippetFromFile(QString FileLocation);
+
+
+    static CodeSnippet GetCodeSnippetFromFile(QString FileLocation);
+    CodeSnippet GetAndReplaceCodeSnippetFromSensor(class Sensor sensor);
     void AddCodeSnippetToIno(CodeSnippet Snippet);
-    void RemoveCodeSnippet(CodeSnippet Snippet);
+    static void ReplacePinNames(QString &Content, QVector<struct Pin> Pins);
+    static void RemoveCodeSnippet(CodeSnippet Snippet);
+    static QString GetFileContent(QString path);
+
+    void SetupFileForSensor(Sensor sensor);
 };
 
 #endif // FILEMANAGER_H

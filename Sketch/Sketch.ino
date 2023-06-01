@@ -6,16 +6,19 @@
 
 void setup() {
 #pragma region Setup
-pinMode(LED_BUILTIN, OUTPUT);
+Serial.begin(9600);
 #pragma endregion Setup
 }
 
 // the loop function runs over and over again forever
 void loop() {
-#pragma region Loop                                    
-digitalWrite(LED_BUILTIN, HIGH);  
-  delay(2000);                      
-  digitalWrite(LED_BUILTIN, LOW);   
-  delay(2000);                      
+String Message = "#";
+#pragma region Loop            
 #pragma endregion Loop
+
+//loop ends here
+	Message += "*";
+	if (Message != "#*"){
+		Serial.print(Message);
+	}
 }

@@ -1,0 +1,13 @@
+~Includes
+#include <ezButton.h>
+~Variables
+ezButton btn_index(_digitalPin0);
+~Setup
+~Loop
+btn_index.loop();
+if (btn_index.isPressed()) {
+		Message += "1:HIGH";
+	}
+	else if (btn.isReleased()) {
+		Message += "1:LOW";
+	}
