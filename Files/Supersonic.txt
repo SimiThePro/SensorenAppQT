@@ -1,4 +1,37 @@
 ~Includes
 ~Variables
+int trigPin_index = _digitalPin0;
+int echoPin_index = _digitalPin1;
+unsigned long lastmillis_index;
+unsigned long lastmicros_index;
+unsigned long lastmicros2_index;
+long duration_index;
+float distance_index, prevdistance_index;
 ~Setup
+  pinMode(trigPin_index, OUTPUT);
+  pinMode(echoPin_index, INPUT);
 ~Loop
+digitalWrite(trigPin_index, LOW);
+
+if ((millis() - lastmillis_index) >= 250){
+
+	if ((micros() - lastmicros_index) >= 5) {
+		lastmicros_index = micros();
+		digitalWrite(trigPin_index, HIGH);
+		if ((micros() - lastmicros2_index) >= 10) {
+			lastmicros2_index = micros();
+			digitalWrite(trigPin_index, HIGH);
+			
+			pinMode(echoPin_index, INPUT);
+			duration_index = pulseIn(echoPin_index, HIGH);
+			distance_index = ((duration_0 / 2) / 29.1);
+			
+			if (distance_index <= prevdistance_index - 0.3 || distance_index >= prevdistance_index + 0.3) {
+				prevdistance_index = distance_index;
+				Message += "_index:" + (String)((duration_index/2) / 29.1) + ";";
+			}
+
+			
+		}
+	}
+}

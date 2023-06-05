@@ -28,6 +28,8 @@ private:
     QStringList Ports;
     QString Ino_Location;
 
+    QString ArduinoPort;
+
     QString UploadOutput;
 
     QString Message;

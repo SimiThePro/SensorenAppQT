@@ -7,7 +7,12 @@ Sensor::Sensor()
     Snippet = FileManager::GetCodeSnippetFromFile(GetCodeSnippetFileLocation());
 }
 
-Sensor::Sensor(QString IconFilePath,QString Type, QString Description, QVector<struct Pin> Pins,QVector<ValueMeasure> Measures)
+Sensor::Sensor(QString IconFilePath,
+               QString Type,
+               QString Description,
+               QVector<struct Pin> Pins,
+               QVector<ValueMeasure> Measures,
+               QVector<MeasureSetting> MeasureSettings)
 {
     this->IconFilePath = IconFilePath;
     this->Type = Type;
@@ -15,6 +20,7 @@ Sensor::Sensor(QString IconFilePath,QString Type, QString Description, QVector<s
     this->Pins = Pins;
     this->Measures = Measures;
     this->Snippet = FileManager::GetCodeSnippetFromFile(GetCodeSnippetFileLocation());
+    this->MeasureSettings = MeasureSettings;
 }
 
 QString Sensor::GetCodeSnippetFileLocation() const

@@ -1,5 +1,7 @@
 #include "addsensor.h"
 #include "qmessagebox.h"
+#include "qpushbutton.h"
+#include "qspinbox.h"
 #include "ui_addsensor.h"
 #include "sensor.h"
 #include "QString"
@@ -125,7 +127,12 @@ void AddSensor::InitializeSensors()
         "Photoresistor",
         "",
         QVector<Pin>{{1,"OUTPUT",true}},
-        QVector<ValueMeasure>{{"Resistance"}}},
+        QVector<ValueMeasure>{{"Resistance"}},
+        QVector<MeasureSetting>{
+            {"Interval",QVariant::fromValue(new QSpinBox)},
+            {"Test",QVariant::fromValue(new QLineEdit)}
+            }
+        },
         //Ultrasonic module
         Sensor{
         ProjectPath + "/Images/Ultraschall.jpg",
@@ -140,8 +147,14 @@ void AddSensor::InitializeSensors()
         "",
         QVector<Pin>{{1,"OUTPUT"}},
         QVector<ValueMeasure>{{"Status"}}
+        },
+        Sensor{
+        ProjectPath + "/Images/Thermistor.jpg",
+            "Thermistor",
+            "",
+            QVector<Pin>{{1,"OUTPUT"}},
+            QVector<ValueMeasure>{{"Temperature"}}
         }
-
 
     };
 

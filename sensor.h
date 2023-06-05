@@ -18,11 +18,23 @@ struct ValueMeasure{
     QString Value = 0;
 };
 
+
+
+struct MeasureSetting{
+    QString Description;
+    QVariant variant;
+};
+
 class Sensor
 {
 public:
     Sensor();
-    Sensor(QString IconFilePath,QString Type, QString Description, QVector<struct Pin> Pins,QVector<ValueMeasure> Measures);
+    Sensor(QString IconFilePath,
+           QString Type,
+           QString Description,
+           QVector<struct Pin> Pins,
+           QVector<ValueMeasure> Measures,
+           QVector<MeasureSetting> MeasureSettings = QVector<MeasureSetting>{});
 private:
 
 
@@ -33,6 +45,7 @@ private:
     QVector<Pin> Pins;
     CodeSnippet Snippet;
     QVector<ValueMeasure> Measures;
+    QVector<MeasureSetting> MeasureSettings;
     Ui::Sensor* Ui;
 
 public:
@@ -43,6 +56,7 @@ public:
     QVector<ValueMeasure> GetMeasures() const {return Measures;}
     Ui::Sensor* GetUi() const {return Ui;}
     QString GetCodeSnippetFileLocation() const;
+    QVector<MeasureSetting> GetMeasureSettings() const {return MeasureSettings;};
 
     //Setter
     void SetIconFilePath(QString IconFilePath) {this->IconFilePath = IconFilePath;}
@@ -51,6 +65,7 @@ public:
     void SetPins(QVector<Pin> Pins) {this->Pins = Pins;}
     void SetSnippet(CodeSnippet snippet){this->Snippet = snippet;}
     void SetUi(Ui::Sensor* Ui){this->Ui = Ui;}
+    void SetMeasureSettings(QVector<MeasureSetting> MeasureSettings) {this->MeasureSettings = MeasureSettings;}
 };
 
 

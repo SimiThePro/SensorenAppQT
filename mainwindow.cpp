@@ -14,6 +14,7 @@
 #include "QLabel"
 #include "QLineEdit"
 #include "serial.h"
+#include "QSpinBox"
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -21,7 +22,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
-    fm(new FileManager)
+    fm(new FileManager),
+    bIsCodeUpToDate(true)
 
 {
     ui->setupUi(this);
@@ -76,8 +78,11 @@ void MainWindow::Compiling()
 void MainWindow::AddSensorToGrid(Sensor sensor)
 {
     QWidget* SensorWidget = new QWidget;
+
+
     Ui::Sensor* SensorUi = new Ui::Sensor();
     SensorUi->setupUi(SensorWidget);
+
     sensor.SetUi(SensorUi);
 
 
@@ -117,7 +122,26 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
     }
 
 
+    Row = 0;
+    for (MeasureSetting setting : sensor.GetMeasureSettings()){
+        QLabel* NamePin = new QLabel;
 
+        NamePin->setText(setting.Description);
+
+        if (setting.variant.canConvert<QLineEdit*>()){
+            QLineEdit* lineEdit = setting.variant.value<QLineEdit*>();
+
+            SensorUi->SettingsGrid->addWidget(lineEdit,Row,1);
+
+        }else if (setting.variant.canConvert<QSpinBox*>()){
+            QSpinBox* spinBox = setting.variant.value<QSpinBox*>();
+
+            SensorUi->SettingsGrid->addWidget(spinBox,Row,1);
+        }
+
+        SensorUi->SettingsGrid->addWidget(NamePin,Row,0);
+        Row++;
+    }
 
 
 
@@ -138,8 +162,9 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
 
 
-    serial->Uploading();
 
+
+    ui->CompileButton->setStyleSheet("background-color: red");
 
 }
 
@@ -255,4 +280,11 @@ void MainWindow::MessageReceived(QString Message)
 }
 
 
+
+
+void MainWindow::on_CompileButton_clicked()
+{
+    ui->CompileButton->setStyleSheet("background-color: green");
+    serial->Uploading();
+}
 

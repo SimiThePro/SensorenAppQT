@@ -3,6 +3,8 @@
 #include "QMessageBox"
 #include "QProcess"
 #include "QTimer"
+#include "QSerialPort"
+#include "QSerialPortInfo"
 
 Serial::Serial(QObject *parent)
     : QObject{parent},
@@ -13,6 +15,18 @@ Serial::Serial(QObject *parent)
 
     //OpenSerialPort();
 
+
+    for (const QSerialPortInfo &serialPortInfo : QSerialPortInfo::availablePorts()){
+
+        if (serialPortInfo.hasVendorIdentifier() && serialPortInfo.hasProductIdentifier()){
+            if (serialPortInfo.vendorIdentifier() == 9025){
+                if(serialPortInfo.productIdentifier() == 67){
+                    ArduinoPort = serialPortInfo.portName();
+                    qInfo() << "Arduino Uno found";
+                }
+            }
+        }
+    }
 
     CLI = new QProcess;
     Compile = new QProcess;
@@ -29,7 +43,7 @@ void Serial::OpenSerialPort()
 {
     Upload->close();
     qInfo() << "Opening";
-    mSerial->setPortName("COM4");
+    mSerial->setPortName(ArduinoPort);
     mSerial->setBaudRate(QSerialPort::Baud9600);
     mSerial->setDataBits(QSerialPort::Data8);
     mSerial->setParity(QSerialPort::NoParity);
@@ -38,6 +52,8 @@ void Serial::OpenSerialPort()
 
     if (mSerial->open(QIODevice::ReadWrite)) {
         qInfo() << "Succesfully connected";
+    }else{
+        qInfo() << mSerial->errorString();
     }
 
 }
@@ -45,6 +61,7 @@ void Serial::OpenSerialPort()
 void Serial::ReadyRead()
 {
     QByteArray data = mSerial->readAll();
+
 
     for (int i = 0; i < data.size(); i++) {
         char receivedChar = data.at(i);
@@ -72,8 +89,8 @@ void Serial::ReadProcess()
 {
     UploadOutput = Upload->readAllStandardOutput();
     qInfo() << UploadOutput;
-    if (UploadOutput.contains("Das Maximum sind")){
-        QTimer::singleShot(4000,this,&Serial::OpenSerialPort);
+    if (UploadOutput.contains("\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\u001B[0m")){
+        QTimer::singleShot(500,this,&Serial::OpenSerialPort);
     }
 }
 

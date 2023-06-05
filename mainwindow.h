@@ -30,6 +30,8 @@ private slots:
 
     void MessageReceived(QString Message);
 
+    void on_CompileButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -50,6 +52,7 @@ private:
     class Serial* serial;
     class FileManager* fm;
 
+    bool bIsCodeUpToDate;
 
 };
 
