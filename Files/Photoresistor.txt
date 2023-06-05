@@ -1,8 +1,14 @@
 ~Includes
 ~Variables
+unsigned long lastmillis_index;
 ~Setup
 pinMode(_analogPin0, INPUT);
 ~Loop
-float Messval = analogRead(_analogPin0);
-float U2_index = Messval * 0.00488758553;
+float Messval_index = analogRead(_analogPin0);
+float U2_index = Messval_index * 0.00488758553;
 float R2_index = (110 * U2_index) / (5 - U2_index);
+if ((millis() - lastmillis_index) >= 300) {
+		lastmillis_index = millis();
+		Message += "_index:" + (String)(int)R2_index + ";";
+
+	}

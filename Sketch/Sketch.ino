@@ -5,8 +5,9 @@
 #pragma endregion Variables
 
 void setup() {
-#pragma region Setup
 Serial.begin(9600);
+Serial.println("Ready!!!");
+#pragma region Setup
 #pragma endregion Setup
 }
 

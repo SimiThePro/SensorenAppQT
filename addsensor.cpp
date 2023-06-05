@@ -1,4 +1,5 @@
 #include "addsensor.h"
+#include "qmessagebox.h"
 #include "ui_addsensor.h"
 #include "sensor.h"
 #include "QString"
@@ -32,7 +33,16 @@ AddSensor::AddSensor(QWidget *parent) :
     QPixmap pix(static_cast<QString>(PROJECT_PATH) + "\\Images\\Photoresitor.png");
     ui->label->setPixmap(pix.scaled(200,200,Qt::KeepAspectRatio));
 
-
+    QString UsedDigitalPinsText = "";
+    for (int pinnumber : UsedDigitalPins){
+        UsedDigitalPinsText.append(QString::number(pinnumber) + ",");
+    }
+    ui->UsedDigitalPins->setText(UsedDigitalPinsText);
+    QString UsedAnalogPinsText = "";
+    for (int pinnumber : UsedAnalogPins){
+        UsedAnalogPinsText.append(QString::number(pinnumber) + ",");
+    }
+    ui->UsedAnalogPins->setText(UsedAnalogPinsText);
 
 }
 
@@ -58,9 +68,39 @@ void AddSensor::on_comboBox_currentIndexChanged(int index)
 
         PinsLineEdits.push_back(NumberPin);
 
+        if (pin.isAnalogPin){
+            /*
+            NumberPin->setPlaceholderText("A");
+            NumberPin->setInputMask("A9");
+            connect(NumberPin, &QLineEdit::textEdited, [=](){QString text = NumberPin->text();
+
+                // If the text is empty or doesn't start with "A", reset it to "A"
+                if (text.isEmpty() || !text.startsWith("A")) {
+                    NumberPin->setText("A");
+                    NumberPin->setCursorPosition(1); // Set the cursor position after "A"
+                }
+                // If the text is longer than "A" followed by a single digit, truncate it
+                else if (text.length() > 2) {
+                    NumberPin->setText(text.left(2));
+                    NumberPin->setCursorPosition(1); // Set the cursor position after "A"
+                }
+
+
+        });
+
+        NumberPin->setText("A" + QString::number(pin.PinNummer));
+        */
+
+        }
+
+
         NumberPin->setValidator(new QIntValidator(0,20,this));
 
-        NamePin->setText(pin.Description);
+
+
+
+
+        NamePin->setText(pin.Description + (pin.isAnalogPin == true ? " (A)" : ""));
         NumberPin->setText(QString::number(pin.PinNummer));
 
         ui->PinsLayout->addWidget(NamePin,Row,0);
@@ -84,7 +124,7 @@ void AddSensor::InitializeSensors()
         ProjectPath + "/Images/Photoresitor.png",
         "Photoresistor",
         "",
-        QVector<Pin>{{1,"OUTPUT"}},
+        QVector<Pin>{{1,"OUTPUT",true}},
         QVector<ValueMeasure>{{"Resistance"}}},
         //Ultrasonic module
         Sensor{
@@ -134,6 +174,7 @@ void AddSensor::on_buttonBox_accepted()
 
 
 
+
     int index = ui->comboBox->currentIndex();
 
     Sensor selectedSensor = VerfuegbareSensoren.at(index);
@@ -142,6 +183,23 @@ void AddSensor::on_buttonBox_accepted()
 
     QVector<Pin> Pins{};
     int i = 0;
+
+    for(int i=0;i<PinsLineEdits.size();i++)
+    {
+        for(int j=i+1;j<PinsLineEdits.size();j++)
+        {
+            // comparing array elements
+            if(PinsLineEdits[i]->text()==PinsLineEdits[j]->text())
+            {
+                QMessageBox msgBox;
+                msgBox.setIcon(QMessageBox::Warning);
+                msgBox.setText("Can't enter the same Pins");
+                msgBox.exec();
+                return;
+            }
+        }
+    }
+
     for (QLineEdit* le : PinsLineEdits){
 
         QString Description;
@@ -150,7 +208,27 @@ void AddSensor::on_buttonBox_accepted()
         Description = VerfuegbareSensoren.at(index).GetPins().at(i).Description;
         PinNumber = le->text().toInt();
 
-        Pin pin = Pin{PinNumber,Description};
+        if (VerfuegbareSensoren.at(index).GetPins().at(i).isAnalogPin){
+            if (UsedAnalogPins.contains(PinNumber)){
+                QMessageBox msgBox;
+                msgBox.setIcon(QMessageBox::Warning);
+                msgBox.setText("Pin is already in use");
+                msgBox.exec();
+                return;
+            }
+
+        }else{
+            if (UsedDigitalPins.contains(PinNumber)) {
+                QMessageBox msgBox;
+                msgBox.setIcon(QMessageBox::Warning);
+                msgBox.setText("Pin is already in use");
+                msgBox.exec();
+                return;
+            }
+
+        }
+
+        Pin pin = Pin{PinNumber,Description,VerfuegbareSensoren.at(index).GetPins().at(i).isAnalogPin};
         Pins.push_back(pin);
         i++;
     }

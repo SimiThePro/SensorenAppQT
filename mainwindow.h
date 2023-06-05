@@ -47,14 +47,16 @@ private:
 
     QString Ino_Location;
 
+    class Serial* serial;
     class FileManager* fm;
 
-    class QLabel* ValueLabel;
 
 };
 
 inline QVector<class Sensor> VerfuegbareSensoren;
 inline QVector<class Sensor> CurrentSensors;
-inline QVector<int> UsedPins{};
+inline QVector<int> UsedDigitalPins{};
+inline QVector<int> UsedAnalogPins{};
+inline QVector<QLabel*> ValueLables{};
 
 #endif // MAINWINDOW_H

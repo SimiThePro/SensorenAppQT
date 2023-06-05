@@ -10,6 +10,7 @@
 struct Pin{
     int PinNummer;
     QString Description;
+    bool isAnalogPin = false;
 };
 
 struct ValueMeasure{

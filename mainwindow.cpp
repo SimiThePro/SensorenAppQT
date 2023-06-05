@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     CurrentSensors = QVector<Sensor>{};
 
-    Serial* serial = new Serial;
+    serial = new Serial;
 
 
     connect(serial,&Serial::MessageReceived,this,&MainWindow::MessageReceived);
@@ -97,20 +97,18 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
         SensorUi->MessungenGrid->addWidget(DescriptionLabel,Row,0);
         SensorUi->MessungenGrid->addWidget(ValueLabel,Row,1);
+
+        ValueLables.push_back(ValueLabel);
+
         Row++;
     }
-
-
-
-
-
 
     Row = 0;
     for (Pin pin : sensor.GetPins()){
         QLabel* NamePin = new QLabel;
         QLabel* NumberPin = new QLabel;
 
-        NamePin->setText(pin.Description);
+        NamePin->setText(pin.Description + (pin.isAnalogPin == true ? " (A)" : ""));
         NumberPin->setText(QString::number(pin.PinNummer));
 
         SensorUi->PinsGrid->addWidget(NamePin,Row,0);
@@ -132,14 +130,15 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
 
     for (Pin pin : sensor.GetPins()){
-        UsedPins.push_back(pin.PinNummer);
+        if (pin.isAnalogPin)
+            UsedAnalogPins.push_back(pin.PinNummer);
+        else
+        UsedDigitalPins.push_back(pin.PinNummer);
     }
 
-    for (int i = 0; i < UsedPins.length(); i++){
-        qInfo() << UsedPins.at(i);
-    }
 
 
+    serial->Uploading();
 
 
 }
@@ -147,7 +146,7 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 void MainWindow::Uploading()
 {
 
-    qWarning() << "Uploading";
+    qInfo() << "Uploading";
     arguments.clear();
 
     arguments << "compile" << "--upload" << "--port" << "COM3" << "--fqbn" << "arduino:avr:uno" << Ino_Location;
@@ -192,19 +191,6 @@ void MainWindow::on_pushButton_2_clicked()
 {
 
     AddSensor* addsensor = new AddSensor(this);
-
-    //CodeSnippet snippet = fm->GetCodeSnippetFromFile(static_cast<QString>(PROJECT_PATH) + "Files/LEDBUILTIN.txt");
-    //fm->AddCodeSnippetToIno(snippet);
-    //Uploading();
-    //fm->RemoveCodeSnippet(snippet);
-
-
-    //fm->ReplacePinNames(fm->GetFileContent(static_cast<QString>(PROJECT_PATH) + "Files/PushButton.txt"),QVector<Pin>{Pin{7,"Ben"},Pin{2,"Juden"}});
-
-    //Sensor sensor = VerfuegbareSensoren.at(2);
-    //sensor.SetPins(QVector<Pin>{Pin{5,"Ben"}});
-    //fm->SetupFileForSensor(sensor);
-
     addsensor->exec();
 
 
@@ -213,16 +199,42 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::MessageReceived(QString Message)
 {
 
+
+
     int index = 0;
 
-    if (Message.contains(':')){
-        index = static_cast<QString>(Message.at(0)).toInt();
+    if (Message.contains(';') && Message.contains(':')){
+        QVector<QString> Messages{};
+        while (Message.contains(';')){
+            QString SlicedMessage = Message.sliced(0,Message.indexOf(';'));
+            Messages.push_back(SlicedMessage);
+            Message.remove(0,Message.indexOf(';')+1);
+        }
+
+        for (const QString &message : Messages){
+
+            if (message == "") continue;
+            index = static_cast<QString>(message.at(0)).toInt();
+
+            if (ValueLables.size() <= index) return;
+
+            if (ValueLables.at(index) == nullptr) continue;
+
+            ValueLables.at(index)->setText(message.sliced(message.indexOf(':')+1));
+        }
+
+        /*
+
         qInfo() << Message.sliced(Message.indexOf(':')+1);
 
         if (CurrentSensors.size() <= index) return;
 
+        */
 
 
+
+
+        /*
         for (int i=0; i < CurrentSensors.at(index).GetUi()->MessungenGrid->count(); ++i) {
             QLayoutItem *item = CurrentSensors.at(index).GetUi()->MessungenGrid->itemAt(i);
             if (!item || !item->widget())
@@ -234,7 +246,7 @@ void MainWindow::MessageReceived(QString Message)
                 }
             }
         }
-
+        */
 
     }
 

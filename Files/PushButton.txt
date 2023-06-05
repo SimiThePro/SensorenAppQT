@@ -6,8 +6,8 @@ ezButton btn_index(_digitalPin0);
 ~Loop
 btn_index.loop();
 if (btn_index.isPressed()) {
-		Message += "1:HIGH";
+		Message += "_index:HIGH;";
 	}
-	else if (btn.isReleased()) {
-		Message += "1:LOW";
+	else if (btn_index.isReleased()) {
+		Message += "_index:LOW;";
 	}

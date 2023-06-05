@@ -20,14 +20,33 @@ public:
 
 private:
 
+    QProcess* CLI;
+    QProcess* Compile;
+    QProcess* Upload;
+    QString CLI_Location;
+    QStringList arguments;
+    QStringList Ports;
+    QString Ino_Location;
+
+    QString UploadOutput;
+
     QString Message;
     QString serialBuffer;
+
+    bool bShouldRead;
+
+
+
 private slots:
     void ReadyRead();
-
+    void ReadProcess();
 signals:
 
     void MessageReceived(QString Message);
+public:
+
+    void Compiling();
+    void Uploading();
 
 };
 

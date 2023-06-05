@@ -3,11 +3,13 @@
 #pragma endregion Includes
 
 #pragma region Variables
+ezButton btn_0(4);
 #pragma endregion Variables
 
 void setup() {
-#pragma region Setup
 Serial.begin(9600);
+Serial.println("Ready!!!");
+#pragma region Setup
 #pragma endregion Setup
 }
 
@@ -15,6 +17,13 @@ Serial.begin(9600);
 void loop() {
 String Message = "#";
 #pragma region Loop            
+btn_0.loop();
+if (btn_0.isPressed()) {
+		Message += "0:HIGH;";
+	}
+	else if (btn_0.isReleased()) {
+		Message += "0:LOW;";
+	}
 #pragma endregion Loop
 
 //loop ends here

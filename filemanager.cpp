@@ -1,5 +1,6 @@
 
 #include "filemanager.h"
+#include "mainwindow.h"
 #include "sensor.h"
 #include "QFile"
 #include "QDebug"
@@ -22,9 +23,18 @@ bool FileManager::CheckIfAlreadyContainsSnippet(CodeSnippet snippet)
 void FileManager::SetIndexForVariables(QString &Content, int index)
 {
     if (Content.contains("_index")){
-        while (Content.contains("_index")){
-            Content.replace("_index",QString::number(index));
+
+        if (Content.contains("_index:")){
+            while (Content.contains("_index:")){
+                Content.replace("_index:",QString::number(index)+ ":");
+            }
         }
+        if (Content.contains("_index")){
+            while (Content.contains("_index")){
+                Content.replace("_index","_" + QString::number(index));
+            }
+        }
+
     }
 }
 
@@ -113,7 +123,7 @@ CodeSnippet FileManager::GetAndReplaceCodeSnippetFromSensor(Sensor sensor)
     QString FileContent = GetFileContent(sensor.GetCodeSnippetFileLocation());
 
     ReplacePinNames(FileContent,sensor.GetPins());
-    SetIndexForVariables(FileContent,0);
+    SetIndexForVariables(FileContent,CurrentSensors.size());
 
     QString Includes;
     QString Variables;
@@ -141,7 +151,7 @@ CodeSnippet FileManager::GetAndReplaceCodeSnippetFromSensor(Sensor sensor)
 void FileManager::AddCodeSnippetToIno(CodeSnippet Snippet)
 {
 
-    if (CheckIfAlreadyContainsSnippet(Snippet)) return;
+    //if (CheckIfAlreadyContainsSnippet(Snippet)) return;
 
     CodeSnippets.push_back(Snippet);
 
@@ -176,6 +186,13 @@ void FileManager::ReplacePinNames(QString &Content, QVector<Pin> Pins)
             for (int i = 0; Content.contains("_digitalPin"); i++){
                 while (Content.contains("_digitalPin" + QString::number(i))){
                     Content.replace("_digitalPin" + QString::number(i),QString::number(Pins.at(i).PinNummer));
+                }
+            }
+        }
+        if (Content.contains("_analogPin")){
+            for (int i = 0; Content.contains("_analogPin"); i++){
+                while (Content.contains("_analogPin" + QString::number(i))){
+                    Content.replace("_analogPin" + QString::number(i), "A" + QString::number(Pins.at(i).PinNummer));
                 }
             }
         }
