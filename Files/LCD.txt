@@ -1,0 +1,11 @@
+~Includes
+#include <LiquidCrystal.h>
+~Variables
+const int rs_index = _digitalPin0, en_index = _digitalPin1, d4_index = _digitalPin2, d5_index = _digitalPin3, d6_index = _digitalPin4, d7_index = _digitalPin5;
+LiquidCrystal lcd_index(rs_index, en_index, d4_index, d5_index, d6_index, d7_index);
+String Text = "Hello";
+~Setup
+lcd_index.begin(16, 2);
+lcd_index.print(Text);
+~Loop
+  

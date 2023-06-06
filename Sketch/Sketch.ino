@@ -14,8 +14,7 @@ Serial.println("Ready!!!");
 // the loop function runs over and over again forever
 void loop() {
 String Message = "#";
-#pragma region Loop            
-#pragma endregion Loop
+#pragma region Loop      #pragma endregion Loop
 
 //loop ends here
 	Message += "*";

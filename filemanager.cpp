@@ -1,6 +1,8 @@
 
 #include "filemanager.h"
 #include "mainwindow.h"
+#include "qlineedit.h"
+#include "qspinbox.h"
 #include "sensor.h"
 #include "QFile"
 #include "QDebug"
@@ -38,6 +40,23 @@ void FileManager::SetIndexForVariables(QString &Content, int index)
     }
 }
 
+void FileManager::WriteToInoFile(const QString &Content)
+{
+    QFile file(static_cast<QString>(PROJECT_PATH)  + "Sketch/Sketch.ino");
+
+    if (!file.open(QIODevice::WriteOnly)){
+        qCritical() << "Could not Open File";
+        qCritical() << file.errorString(); //pushes data to the disk
+        return;
+    }
+
+    QTextStream InoStream(&file);
+
+    InoStream << Content;
+
+    file.close();
+}
+
 QString FileManager::GetFileContent(QString path)
 {
     QFile file(path);
@@ -71,6 +90,60 @@ void FileManager::SetupFileForSensor(Sensor sensor)
     CodeSnippet snippet = GetAndReplaceCodeSnippetFromSensor(sensor);
     AddCodeSnippetToIno(snippet);
 }
+
+void FileManager::SettingChanged(const QString &variableName, const QString &Value)
+{
+    QString FileContent = GetFileContent(static_cast<QString>(PROJECT_PATH) + "Sketch/Sketch.ino");
+
+
+
+    if (FileContent.contains(variableName + " =")){
+
+        QString variable = FileContent.sliced(FileContent.indexOf(variableName + " ="),FileContent.indexOf(';',FileContent.indexOf(variableName + " =")) - FileContent.indexOf(variableName + " ="));
+
+        bool bIsString = variable.contains("\"");
+
+        QString fixedValue;
+
+        QString newVariable;
+
+        if (!bIsString){
+            for (QChar c : Value){
+
+                if (c == ',') c = '.';
+                else if (c.isLetter()) continue;
+                else if (c.isSpace()) continue;
+                fixedValue.append(c);
+            }
+
+            newVariable = variableName + " = " + fixedValue;
+
+
+        }else {
+            newVariable = variableName + " = " +  "\"" + Value + "\"";
+        }
+
+
+        FileContent.replace(variable,newVariable);
+
+        for (CodeSnippet &snippets : CodeSnippets){
+            snippets.Variables.replace(variable,newVariable);
+            snippets.Setup.replace(variable,newVariable);
+            snippets.Loop.replace(variable,newVariable);
+        }
+
+        if (variable.sliced(variable.indexOf('=')+2).contains(QRegularExpression("\\d*"))){
+            qInfo() << "Number";
+        }if(variable.sliced(variable.indexOf('=')+2).contains(QRegularExpression("\\w*"))){
+            qInfo() << "Letters";
+        }
+    }
+
+    mw->NeedToCompile(true);
+
+    WriteToInoFile(FileContent);
+}
+
 CodeSnippet FileManager::GetCodeSnippetFromFile(QString FileLocation)
 {
     QString FileContent = GetFileContent(FileLocation);
@@ -230,5 +303,6 @@ void FileManager::RemoveCodeSnippet(CodeSnippet Snippet)
 
 
 }
+
 
 

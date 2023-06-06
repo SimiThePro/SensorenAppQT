@@ -115,7 +115,14 @@ void AddSensor::on_comboBox_currentIndexChanged(int index)
 
 void AddSensor::InitializeSensors()
 {
-    FileManager fm;
+
+    QDoubleSpinBox* dSpinBox = new QDoubleSpinBox;
+    dSpinBox->setRange(0,10);
+    dSpinBox->setSuffix(" s");
+    dSpinBox->setSingleStep(0.25);
+    dSpinBox->setDecimals(3);
+
+
 
     QString ProjectPath =  static_cast<QString>(PROJECT_PATH);
 
@@ -129,8 +136,8 @@ void AddSensor::InitializeSensors()
         QVector<Pin>{{1,"OUTPUT",true}},
         QVector<ValueMeasure>{{"Resistance"}},
         QVector<MeasureSetting>{
-            {"Interval",QVariant::fromValue(new QSpinBox)},
-            {"Test",QVariant::fromValue(new QLineEdit)}
+            {"Interval",QVariant::fromValue(dSpinBox),"sendInterval"},
+            {"Test",QVariant::fromValue(new QLineEdit),"benTest"}
             }
         },
         //Ultrasonic module
@@ -154,6 +161,23 @@ void AddSensor::InitializeSensors()
             "",
             QVector<Pin>{{1,"OUTPUT"}},
             QVector<ValueMeasure>{{"Temperature"}}
+        },
+        Sensor{
+        ProjectPath + "/Images/LCD.jpg",
+        "LCD",
+        "",
+        QVector<Pin>{
+                {1,"rs"},
+                {2,"en"},
+                {3,"d4"},
+                {4,"d5"},
+                {5,"d6"},
+                {6,"d7"}
+            },
+        QVector<ValueMeasure>{},
+        QVector<MeasureSetting>{
+        {"Text:",QVariant::fromValue(new QLineEdit),"Text"}
+            }
         }
 
     };

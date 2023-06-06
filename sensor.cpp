@@ -32,6 +32,11 @@ QString Sensor::GetCodeSnippetFileLocation() const
     return static_cast<QString>(PROJECT_PATH) + "Files/" + TypeWithoutSpace + ".txt";
 }
 
+void Sensor::SettingValueChanged(const QString &value)
+{
+
+}
+
 
 
 void InitializeSensoren()

@@ -16,6 +16,8 @@ public:
     explicit AddSensor(QWidget *parent = nullptr);
     ~AddSensor();
 
+    static void clearLayout(QLayout *layout);
+
 private slots:
     void on_comboBox_currentIndexChanged(int index);
 
@@ -28,7 +30,7 @@ private:
 
     void InitializeSensors();
 
-    void clearLayout(QLayout *layout);
+
 
     class MainWindow* mw;
 

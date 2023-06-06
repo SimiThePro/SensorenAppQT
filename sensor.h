@@ -23,6 +23,7 @@ struct ValueMeasure{
 struct MeasureSetting{
     QString Description;
     QVariant variant;
+    QString VariableName;
 };
 
 class Sensor
@@ -66,6 +67,11 @@ public:
     void SetSnippet(CodeSnippet snippet){this->Snippet = snippet;}
     void SetUi(Ui::Sensor* Ui){this->Ui = Ui;}
     void SetMeasureSettings(QVector<MeasureSetting> MeasureSettings) {this->MeasureSettings = MeasureSettings;}
+
+
+
+public slots:
+    void SettingValueChanged(const QString& value);
 };
 
 

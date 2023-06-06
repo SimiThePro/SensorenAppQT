@@ -32,6 +32,8 @@ private slots:
 
     void on_CompileButton_clicked();
 
+    void handleTextChanged(const QString& newText);
+
 private:
     Ui::MainWindow *ui;
 
@@ -54,6 +56,9 @@ private:
 
     bool bIsCodeUpToDate;
 
+public:
+
+    void NeedToCompile(bool need);
 };
 
 inline QVector<class Sensor> VerfuegbareSensoren;

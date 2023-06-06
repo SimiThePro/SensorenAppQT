@@ -1,29 +1,28 @@
 #pragma region Includes
-#include <ezButton.h>
+#include <LiquidCrystal.h>
 #pragma endregion Includes
 
 #pragma region Variables
-ezButton btn_0(4);
+const int rs_0 = 1, en_0 = 2, d4_0 = 3, d5_0 = 4, d6_0 = 5, d7_0 = 6;
+LiquidCrystal lcd_0(rs_0, en_0, d4_0, d5_0, d6_0, d7_0);
+String Text = "Hello";
 #pragma endregion Variables
 
 void setup() {
 Serial.begin(9600);
 Serial.println("Ready!!!");
 #pragma region Setup
+lcd_0.begin(16, 2);
+lcd_0.print(Text);
 #pragma endregion Setup
 }
 
 // the loop function runs over and over again forever
 void loop() {
 String Message = "#";
-#pragma region Loop            
-btn_0.loop();
-if (btn_0.isPressed()) {
-		Message += "0:HIGH;";
-	}
-	else if (btn_0.isReleased()) {
-		Message += "0:LOW;";
-	}
+#pragma region Loop        
+  
+  
 #pragma endregion Loop
 
 //loop ends here

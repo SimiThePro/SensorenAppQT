@@ -21,14 +21,13 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow),
-    fm(new FileManager),
-    bIsCodeUpToDate(true)
+    , ui(new Ui::MainWindow)
 
 {
     ui->setupUi(this);
 
 
+    fm = new FileManager(this);
 
     auto SerialPorts = QSerialPortInfo::availablePorts();
     for (QSerialPortInfo Port : SerialPorts){
@@ -73,6 +72,15 @@ void MainWindow::Compiling()
     Compile->startDetached(CLI_Location,arguments);
     Compile->close();
 
+}
+
+void MainWindow::NeedToCompile(bool need)
+{
+    if (need){
+        ui->CompileButton->setStyleSheet("background-color: red");
+    }else{
+        ui->CompileButton->setStyleSheet("background-color: green");
+    }
 }
 
 void MainWindow::AddSensorToGrid(Sensor sensor)
@@ -123,6 +131,11 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
 
     Row = 0;
+    if (sensor.GetMeasureSettings().size() == 0){
+        delete SensorUi->label_2;
+        delete SensorUi->horizontalLayout_4;
+    }
+    else{
     for (MeasureSetting setting : sensor.GetMeasureSettings()){
         QLabel* NamePin = new QLabel;
 
@@ -131,10 +144,18 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
         if (setting.variant.canConvert<QLineEdit*>()){
             QLineEdit* lineEdit = setting.variant.value<QLineEdit*>();
 
+            lineEdit->setText(0);
+
+            connect(lineEdit, &QLineEdit::textChanged,this,&MainWindow::handleTextChanged);
+
             SensorUi->SettingsGrid->addWidget(lineEdit,Row,1);
 
-        }else if (setting.variant.canConvert<QSpinBox*>()){
-            QSpinBox* spinBox = setting.variant.value<QSpinBox*>();
+        }else if (setting.variant.canConvert<QDoubleSpinBox*>()){
+            QDoubleSpinBox* spinBox = setting.variant.value<QDoubleSpinBox*>();
+            spinBox->setValue(0);
+
+
+            connect(spinBox, &QDoubleSpinBox::textChanged,this,&MainWindow::handleTextChanged);
 
             SensorUi->SettingsGrid->addWidget(spinBox,Row,1);
         }
@@ -142,6 +163,8 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
         SensorUi->SettingsGrid->addWidget(NamePin,Row,0);
         Row++;
     }
+    }
+
 
 
 
@@ -153,6 +176,8 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
 
 
 
+
+
     for (Pin pin : sensor.GetPins()){
         if (pin.isAnalogPin)
             UsedAnalogPins.push_back(pin.PinNummer);
@@ -160,11 +185,7 @@ void MainWindow::AddSensorToGrid(Sensor sensor)
         UsedDigitalPins.push_back(pin.PinNummer);
     }
 
-
-
-
-
-    ui->CompileButton->setStyleSheet("background-color: red");
+    NeedToCompile(true);
 
 }
 
@@ -284,7 +305,29 @@ void MainWindow::MessageReceived(QString Message)
 
 void MainWindow::on_CompileButton_clicked()
 {
-    ui->CompileButton->setStyleSheet("background-color: green");
+    NeedToCompile(false);
     serial->Uploading();
+}
+
+void MainWindow::handleTextChanged(const QString &newText)
+{
+    QObject* senderObject = QObject::sender();
+    int sensorindex = 0;
+    int settingindex = 0;
+    for (Sensor sensor : CurrentSensors){
+        settingindex = 0;
+        for (MeasureSetting setting : sensor.GetMeasureSettings()){
+            if (setting.variant.value<QLineEdit*>() == senderObject || setting.variant.value<QDoubleSpinBox*>() == senderObject){
+                qInfo() << CurrentSensors.at(sensorindex).GetMeasureSettings().at(settingindex).VariableName;
+
+                fm->SettingChanged(CurrentSensors.at(sensorindex).GetMeasureSettings().at(settingindex).VariableName,newText);
+            }
+            settingindex++;
+        }
+        sensorindex++;
+    }
+
+
+
 }
 

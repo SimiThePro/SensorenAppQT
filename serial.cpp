@@ -62,6 +62,7 @@ void Serial::ReadyRead()
 {
     QByteArray data = mSerial->readAll();
 
+    qInfo() << data;
 
     for (int i = 0; i < data.size(); i++) {
         char receivedChar = data.at(i);
